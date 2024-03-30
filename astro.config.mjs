@@ -32,6 +32,4 @@ const BASE_URL = "erick0711";
 
 export default defineConfig({
   site: LIVE_URL,
-  base: BASE_URL,
-  integrations: [tailwind(), sitemap(), robotsTxt()],
 })
