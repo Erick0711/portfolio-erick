@@ -6,20 +6,32 @@ import { SITE_URL } from "./src/data/config";
 
 
 // https://astro.build/config
-export default defineConfig({
-  integrations: [tailwind(), sitemap(), robotsTxt()],
-  site: SITE_URL,
-  markdown: {
-    syntaxHighlight: "shiki",
-    shikiConfig: {
-      theme: "nord",
-      wrap: false
-    }
-  }
-});
-
-
 // export default defineConfig({
-//   site: 'https://portfolio-erick.github.io',
-//   base: '/mi-repo',
-// })
+//   integrations: [tailwind(), sitemap(), robotsTxt()],
+//   site: SITE_URL,
+//   markdown: {
+//     syntaxHighlight: "shiki",
+//     shikiConfig: {
+//       theme: "nord",
+//       wrap: false
+//     }
+//   }
+// });
+
+
+const LIVE_URL = "https://portfolio-erick.github.io";
+
+const SCRIPT = process.env.npm_lifecycle_script || "";
+const isBuild = SCRIPT.includes("astro build");
+
+
+
+if(isBuild){
+  BASE_URL = SITE_URL;
+}
+
+export default defineConfig({
+  site: LIVE_URL,
+  base: BASE_URL,
+  integrations: [tailwind(), sitemap(), robotsTxt()],
+})
