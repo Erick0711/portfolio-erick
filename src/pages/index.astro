@@ -1,0 +1,141 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets"
+
+import Layout from "@/layouts/Layout.astro";
+import SocialLinks from "@/components/SocialLinks.astro";
+import PostCard from "@/components/PostCard.astro";
+import ExperiencesCard from "@/components/ExperiencesCard.astro";
+
+import Link from "@/components/shared/Link.astro";
+import convertAsteriskToStrongTag from "@/utils/convertAsteriskToStrongTag";
+import { technologies, technologiesPNG } from "@/data/technologies";
+
+import presentation from "@/data/presentation";
+import projects from "@/data/projects";
+import experiences from "@/data/experiences";
+
+import { map } from "astro/zod";
+
+const posts = (await getCollection("posts")).sort(function (first, second) {
+  return second.data.publishedAt.getTime() - first.data.publishedAt.getTime();
+});
+---
+
+<Layout>
+  <main class="flex flex-col gap-20">
+    <article
+      class="flex flex-col gap-8 md:flex-row-reverse md:justify-end md:gap-12 text-justify bg-gray-800 p-6 rounded-lg"
+    >
+      {
+        presentation.profile && (
+          <Image
+            src={presentation.profile}
+            class="w-1/4 self-center rounded-s-full"
+            alt="Your Profile"
+            width="200"
+            height="200"
+          />
+        )
+      }
+
+      <div class="flex flex-col gap-8">
+        <h1 class="text-3xl text-neutral-100">
+          {presentation.title}
+        </h1>
+
+        <h2
+          class="w-auto max-w-[60ch] leading-6"
+          set:html={convertAsteriskToStrongTag(presentation.description)}
+        />
+
+        <SocialLinks />
+      </div>
+    </article>
+
+    <article class="flex flex-col">
+      <header class="flex w-full flex-row justify-between gap-2">
+        <!-- <h3 class="text-lg text-neutral-100">Información Personal</h3> -->
+        <!-- <Link href="/posts" label="See all posts" isUnderline target="_self" /> -->
+      </header>
+      <section class="grid md:grid-cols-3 gap-3 md:flex-row md:flex-wrap">
+
+        <!-- <span class="p-6 md:col-span-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-pink-800 dark:border-pink-700 dark:hover:bg-pink-700">
+          <h5 class="mb-2 text-xs font-extrabold tracking-tight text-gray-900 dark:text-gray-400 text-center">EDAD</h5>
+          <h2 class="font-bold text-6xl dark:text-white text-center">24</h2>
+          <p class="font-bold text-xs dark:text-gray-400 text-center mt-5">AÑOS</p>
+        </span> -->
+
+        <span class="flex flex-col md:col-span-2 items-center justify-center p-6 rounded-lg shadow dark:bg-pink-700 dark:border-pink-800">
+          <h2 class="font-extrabold text-6xl dark:text-white text-center">+2</h2>
+          <h2 class="font-extrabold text-xs dark:text-gray-300 text-center mt-5">AÑOS DE EXPERIENCIA</h2>
+        </span>
+
+        <span class=" md:col-span-1 md:row-span-2 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <section class="grid md:grid-cols-3 gap-3 place-content-center text-center">
+              <!-- {
+              technologies.map((technologie) => (
+                  <span>
+                    <i class={`${technologie.icon} text-5xl`}></i>
+                  </span>
+                ))
+              } -->
+              {
+                technologiesPNG.map((technologiePNG) => (
+                    <span>
+                      <img src={`${technologiePNG.link}`} alt="" width={`${technologiePNG.width}`} height={`${technologiePNG.height}`} class="text-gray-500"/>
+                    </span>
+                  ))
+                }
+                
+          </section>
+        </span>
+
+        <!-- A PARTIR DE ESTE COMENTARIO DEBEN SER DE 3 COLUMNAS  -->
+        <span class="flex flex-col md:col-span-2 items-center justify-center p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h4 class="font-extrabold text-xs dark:text-gray-400 text-center">EDAD</h4>
+          <h2 class="font-extrabold text-6xl dark:text-gray-400 text-center">24</h2>
+          <h2 class="font-extrabold text-xs dark:text-gray-400 text-center mt-5">AÑOS</h2>
+        </span>
+
+        <!-- <span class="flex flex-col items-center justify-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <img src="https://media1.tenor.com/m/YbmQHDSJvbkAAAAC/thumbs-up-hacker.gif" alt="" width="100" height="40" class="bg-white">
+          <p class="mt-4">Proyectos</p>
+        </span> -->
+      
+      
+
+      </section>
+    </article>
+
+    <article class="flex flex-col gap-8">
+      <header class="flex w-full flex-row justify-between gap-2">
+        <h3 class="text-lg text-neutral-100">
+          Experiencia ({experiences.length})
+        </h3>
+      </header>
+      {experiences.length === 0 && <p>Oops, I must work^^^^^</p>}
+
+      <section class="flex flex-col gap-4">
+        {
+          experiences.length !== 0 &&
+          experiences.map((experience) => <ExperiencesCard {...experience} />)
+        }
+      </section>
+    </article>
+
+    <article class="flex flex-col gap-8">
+      <header class="flex w-full flex-row justify-between gap-2">
+        <h3 class="text-lg text-neutral-100">Contacto</h3>
+      </header>
+      <p>
+        Correo <Link
+          href={`mailto:${presentation.mail}`}
+          label={presentation.mail}
+        /> o visita mis redes sociales.
+      </p>
+
+      <SocialLinks />
+    </article>
+  </main>
+</Layout>
