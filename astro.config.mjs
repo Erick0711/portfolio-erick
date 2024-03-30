@@ -24,11 +24,11 @@ const LIVE_URL = "https://portfolio-erick.github.io";
 const SCRIPT = process.env.npm_lifecycle_script || "";
 const isBuild = SCRIPT.includes("astro build");
 
+const BASE_URL = "erick0711";
 
-
-if(isBuild){
-  BASE_URL = SITE_URL;
-}
+// if(isBuild){
+//   BASE_URL = SITE_URL;
+// }
 
 export default defineConfig({
   site: LIVE_URL,
